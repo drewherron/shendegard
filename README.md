@@ -1,8 +1,6 @@
-# Threat Intelligence API Gateway
+# Shendegard
 
-(Will come up with a better name soon...)
-
-This will be simple API that takes IOCs (domains, IPs, hashes, URLs) and checks them against multiple threat intelligence sources.
+A simple API that takes IOCs (domains, IPs, hashes, URLs) and checks them against multiple threat intelligence sources.
 
 ## What it does
 
