@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  shendegard:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - CACHE__HOST=redis
+      - CACHE__PORT=6379
+      - CACHE__DB=0
+    volumes:
+      - ./config/config.yaml:/app/config/config.yaml:ro
+      - ./logs:/app/logs
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - shendegard-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      - ./docker/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    command: redis-server /usr/local/etc/redis/redis.conf
+    networks:
+      - shendegard-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+
+networks:
+  shendegard-network:
+    driver: bridge
