@@ -1,0 +1,36 @@
+# Shendegard Configuration
+# Copy this to config.yaml and fill in your API keys
+
+app_name: "Shendegard"
+version: "1.0.0"
+debug: false
+host: "0.0.0.0"
+port: 8000
+
+# Redis Cache Configuration
+cache:
+  host: "localhost"
+  port: 6379
+  password: null
+  db: 0
+  # TTL in seconds
+  ttl_ip: 3600      # 1 hour - IPs change reputation frequently
+  ttl_domain: 86400 # 24 hours - domains are more stable
+  ttl_hash: 604800  # 1 week - file hashes rarely change
+  ttl_url: 3600     # 1 hour - URLs can change quickly
+
+# Rate Limiting
+rate_limit:
+  requests_per_minute: 60
+  burst_allowance: 10
+  enabled: true
+
+# External API Keys
+# Get these from:
+# - VirusTotal: https://www.virustotal.com/gui/my-apikey
+# - AbuseIPDB: https://www.abuseipdb.com/api
+# - AlienVault OTX: https://otx.alienvault.com/api
+api_keys:
+  virustotal: "your_virustotal_api_key_here"
+  abuseipdb: "your_abuseipdb_api_key_here" 
+  otx: "your_otx_api_key_here"
