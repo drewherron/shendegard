@@ -19,6 +19,8 @@ GET /check/hash/d41d8cd98f00b204e9800998ecf8427e
 
 ## Setup
 
-Will be containerized with Docker. Just add API keys to the config and run `docker-compose up`.
+Containerized with Docker. Just add API keys to the config and run `docker-compose up`.
 
-This will be the foundation for a bigger threat intelligence platform.
+But... not yet. It's still under construction.
+
+I'm planning on this being the foundation for a larger threat intelligence platform.
