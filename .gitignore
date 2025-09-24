@@ -155,3 +155,14 @@ docker-compose.override.yml
 # Logs
 *.log
 logs/
+
+# NLP Model files and checkpoints
+models/*.pt
+models/*.pth
+models/*.bin
+models/*.safetensors
+models/checkpoints/
+models/cache/
+*.ckpt
+*.model
+.huggingface/

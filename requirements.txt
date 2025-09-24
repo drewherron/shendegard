@@ -24,7 +24,7 @@ structlog==23.2.0
 python-multipart==0.0.6
 email-validator==2.1.0
 
-# STIX/TAXII support (for future Project 3)
+# STIX/TAXII support
 stix2==3.0.1
 
 # Testing framework
@@ -36,3 +36,12 @@ pytest-mock==3.12.0
 black==23.11.0
 flake8==6.1.0
 isort==5.12.0
+
+# NLP and ML dependencies
+transformers==4.36.0
+torch==2.1.1
+spacy==3.7.2
+sentence-transformers==2.2.2
+datasets==2.15.0
+tokenizers==0.15.0
+accelerate==0.25.0
