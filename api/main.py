@@ -4,8 +4,24 @@ Shendegard - NLP-Powered Multilingual Threat Intelligence Platform
 Main FastAPI application entry point.
 """
 
-from fastapi import FastAPI
+import logging
+import time
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from config.settings import settings
+
+# Configure logging
+logging.basicConfig(
+    level=logging.DEBUG if settings.debug else logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler('logs/app.log')
+    ]
+)
+
+logger = logging.getLogger(__name__)
 
 # Application metadata
 app = FastAPI(
@@ -45,18 +61,47 @@ app = FastAPI(
 )
 
 
+# CORS Configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, specify allowed origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+# Request timing middleware
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    """Add request processing time to response headers."""
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+    response.headers["X-Process-Time"] = f"{process_time:.4f}"
+
+    # Log request
+    logger.info(
+        f"{request.method} {request.url.path} - "
+        f"Status: {response.status_code} - "
+        f"Time: {process_time:.4f}s"
+    )
+
+    return response
+
+
 @app.on_event("startup")
 async def startup_event():
     """Application startup tasks."""
-    print(f"Starting {settings.app_name} v{settings.version}")
-    print(f"Debug mode: {settings.debug}")
-    print(f"Documentation available at http://{settings.host}:{settings.port}/docs")
+    logger.info(f"Starting {settings.app_name} v{settings.version}")
+    logger.info(f"Debug mode: {settings.debug}")
+    logger.info(f"Documentation available at http://{settings.host}:{settings.port}/docs")
 
 
 @app.on_event("shutdown")
 async def shutdown_event():
     """Application shutdown tasks."""
-    print(f"Shutting down {settings.app_name}")
+    logger.info(f"Shutting down {settings.app_name}")
 
 
 @app.get("/", tags=["Root"])
